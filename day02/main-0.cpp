@@ -90,7 +90,7 @@ int main(int argc, char **argv) {
             myResponse = convertResponse.at(line[2]);
         } catch (const std::out_of_range &e) {
             cerr << "Invalid input file" << endl;
-            exit(EXIT_FAILURE);
+            return (EXIT_FAILURE);
         }
         totalScore += static_cast<int>(myResponse);
         totalScore += static_cast<int>(checkMyMove.at({opponentMove, myResponse}));
