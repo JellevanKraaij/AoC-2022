@@ -4,8 +4,6 @@
 
 using namespace std;
 
-#define stringify(name) #name;
-
 enum Move {
     Rock = 1,
     Paper = 2,
