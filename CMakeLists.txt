@@ -6,3 +6,4 @@ set (CMAKE_EXPORT_COMPILE_COMMANDS ON) #vscode include path checking
 
 add_subdirectory(day01)
 add_subdirectory(day02)
+add_subdirectory(day03)
