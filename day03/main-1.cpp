@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
     string line;
     int totalPrio;
     while (getline(inputFile, line)) {
-        if ((line.length() % 2) != 0 || line.empty() || none_of(line.begin(), line.end(), ::isalpha)) {
+        if ((line.length() % 2) != 0 || line.empty() || !all_of(line.begin(), line.end(), ::isalpha)) {
             cerr << "backpack format error" << endl;
             return (EXIT_FAILURE);
         }
