@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
     }
     sort(totals.begin(), totals.end(), greater<int>());
     int total = 0;
-    for (int i = 0; i < min(totals.size(), (size_t)3); i++) {
+    for (size_t i = 0; i < min(totals.size(), (size_t)3); i++) {
         total += totals[i];
         cout << i + 1 << ": " << totals[i] << endl;
     }

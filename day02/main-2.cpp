@@ -16,7 +16,7 @@ enum Result {
     Loss = 0,
 };
 
-const map<char, Move> convertOpponent = {
+const map<char, Move> looupOpponentMove = {
     {'A', Rock},
     {'B', Paper},
     {'C', Scissor},
@@ -28,7 +28,7 @@ const map<char, Result> convertRoundResult = {
     {'Z', Win},
 };
 
-const map<pair<Move, Result>, Move> checkMyMove = {
+const map<pair<Move, Result>, Move> lookupResult = {
     {{Rock, Loss}, Scissor}, {{Rock, Draw}, Rock},     {{Rock, Win}, Paper},       {{Paper, Loss}, Rock},  {{Paper, Draw}, Paper},
     {{Paper, Win}, Scissor}, {{Scissor, Loss}, Paper}, {{Scissor, Draw}, Scissor}, {{Scissor, Win}, Rock},
 };
@@ -63,6 +63,16 @@ std::ostream &operator<<(std::ostream &ostream, const Result &res) {
     return (ostream);
 }
 
+template <char C>
+istream &expect(istream &s) {
+    if (s.flags() & ios_base::skipws) s >> ws;
+    if (s.peek() == C)
+        s.ignore();
+    else
+        s.setstate(std::ios_base::failbit);
+    return (s);
+}
+
 int main(int argc, char **argv) {
     if (argc != 2) {
         cerr << "Usage: " << argv[0] << " inputfile" << endl;
@@ -76,21 +86,26 @@ int main(int argc, char **argv) {
     }
 
     string line;
-    int totalScore;
-    while (getline(inputFile, line) && !line.empty()) {
+    int totalScore = 0;
+    char oppC, myC;
+
+    // clang-format off
+    while (inputFile >> noskipws >> oppC >> expect<' '> >> myC >> expect<'\n'>)
+    // clang-format on
+    {
         Move opponentMove;
         Result roundResult;
         try {
-            opponentMove = convertOpponent.at(line[0]);
+            opponentMove = looupOpponentMove.at(line[0]);
             roundResult = convertRoundResult.at(line[2]);
         } catch (const std::out_of_range &e) {
             cerr << "Invalid input file" << endl;
             exit(EXIT_FAILURE);
         }
         totalScore += static_cast<int>(roundResult);
-        totalScore += static_cast<int>(checkMyMove.at({opponentMove, roundResult}));
+        totalScore += static_cast<int>(lookupResult.at({opponentMove, roundResult}));
 
-        cout << opponentMove << " : " << checkMyMove.at({opponentMove, roundResult}) << " = " << roundResult << endl;
+        cout << opponentMove << " : " << lookupResult.at({opponentMove, roundResult}) << " = " << roundResult << endl;
     }
     cout << endl;
     cout << "totalScore = " << totalScore << endl;
