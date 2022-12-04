@@ -13,8 +13,13 @@ int main(int argc, char **argv) {
 
     ifstream inputFile(argv[1]);
 
+    if (!inputFile) {
+        cout << "Cannot open inputfile" << endl;
+        return (EXIT_FAILURE);
+    }
+
     vector<int> totals;
-    int currentTotal;
+    int currentTotal = 0;
 
     string line;
     while (getline(inputFile, line)) {
