@@ -22,15 +22,15 @@ const map<char, Move> convertOpponent = {
     {'C', Scissor},
 };
 
-const map<char, Result> convertRoundResult = {
-    {'X', Loss},
-    {'Y', Draw},
-    {'Z', Win},
+const map<char, Move> convertResponse = {
+    {'X', Rock},
+    {'Y', Paper},
+    {'Z', Scissor},
 };
 
-const map<pair<Move, Result>, Move> checkMyMove = {
-    {{Rock, Loss}, Scissor}, {{Rock, Draw}, Rock},     {{Rock, Win}, Paper},       {{Paper, Loss}, Rock},  {{Paper, Draw}, Paper},
-    {{Paper, Win}, Scissor}, {{Scissor, Loss}, Paper}, {{Scissor, Draw}, Scissor}, {{Scissor, Win}, Rock},
+const map<pair<Move, Move>, Result> checkMyMove = {
+    {{Rock, Rock}, Draw},    {{Rock, Paper}, Win},   {{Rock, Scissor}, Loss},  {{Paper, Rock}, Loss},      {{Paper, Paper}, Draw},
+    {{Paper, Scissor}, Win}, {{Scissor, Rock}, Win}, {{Scissor, Paper}, Loss}, {{Scissor, Scissor}, Draw},
 };
 
 std::ostream &operator<<(std::ostream &ostream, const Move &move) {
@@ -79,18 +79,18 @@ int main(int argc, char **argv) {
     int totalScore;
     while (getline(inputFile, line) && !line.empty()) {
         Move opponentMove;
-        Result roundResult;
+        Move myResponse;
         try {
             opponentMove = convertOpponent.at(line[0]);
-            roundResult = convertRoundResult.at(line[2]);
+            myResponse = convertResponse.at(line[2]);
         } catch (const std::out_of_range &e) {
             cerr << "Invalid input file" << endl;
-            exit(EXIT_FAILURE);
+            return (EXIT_FAILURE);
         }
-        totalScore += static_cast<int>(roundResult);
-        totalScore += static_cast<int>(checkMyMove.at({opponentMove, roundResult}));
+        totalScore += static_cast<int>(myResponse);
+        totalScore += static_cast<int>(checkMyMove.at({opponentMove, myResponse}));
 
-        cout << opponentMove << " : " << checkMyMove.at({opponentMove, roundResult}) << " = " << roundResult << endl;
+        cout << opponentMove << " : " << myResponse << " = " << checkMyMove.at({opponentMove, myResponse}) << endl;
     }
     cout << endl;
     cout << "totalScore = " << totalScore << endl;

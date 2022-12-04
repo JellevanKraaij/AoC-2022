@@ -5,7 +5,7 @@
 
 using namespace std;
 
-int calculatePrioValue(const string &input) {
+int calculatePrioValue(string input) {
     int result = 0;
 
     for (const char &c : input) {
@@ -17,17 +17,19 @@ int calculatePrioValue(const string &input) {
     return (result);
 }
 
-string findDoubleItems(const string &backpack1, const string &backpack2) {
-    string doubleItems;
+string findSharedItems(const string input[3]) {
+    string sharedItems;
     string alreadyChecked;
-    for (const char &c : backpack1) {
-        if (alreadyChecked.find(c) == string::npos && backpack2.find(c) != string::npos) {
+
+    for (const char &c : input[0]) {
+        if (alreadyChecked.find(c) == string::npos && input[1].find(c) != string::npos && input[2].find(c) != string::npos) {
             alreadyChecked += c;
-            doubleItems += c;
+            sharedItems += c;
         }
     }
-    return (doubleItems);
+    return (sharedItems);
 }
+
 int main(int argc, char **argv) {
     if (argc != 2) {
         cerr << "Usage: " << argv[0] << " inputfile" << endl;
@@ -39,19 +41,20 @@ int main(int argc, char **argv) {
         cerr << "Unable to open file " << argv[1] << endl;
         return (EXIT_FAILURE);
     }
-    string line;
+    int i = 0;
+    string lines[3];
     int totalPrio;
-    while (getline(inputFile, line)) {
-        if ((line.length() % 2) != 0 || line.empty() || none_of(line.begin(), line.end(), ::isalpha)) {
+    while (getline(inputFile, lines[i])) {
+        if ((lines[i].length() % 2) != 0 || lines[i].empty() || none_of(lines[i].begin(), lines[i].end(), ::isalpha)) {
             cerr << "backpack format error" << endl;
             return (EXIT_FAILURE);
         }
-        const string backpack1 = line.substr(0, line.length() / 2);
-        const string backpack2 = line.substr(line.length() / 2);
-
-        const string doubleItems = findDoubleItems(backpack1, backpack2);
-        totalPrio += calculatePrioValue(doubleItems);
-        cout << backpack1 << " : " << backpack2 << " wrong items = " << doubleItems << endl;
+        if (++i < 3)
+            continue;
+        i = 0;
+        const string sharedItems = findSharedItems(lines);
+        totalPrio += calculatePrioValue(sharedItems);
+        cout << lines[0] << " : " << lines[1] << " : " << lines[2] << " shared items = " << sharedItems << endl;
     }
     cout << endl;
     cout << "totalScore = " << totalPrio << endl;
