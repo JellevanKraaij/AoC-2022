@@ -16,6 +16,12 @@ istream &expect(istream &s) {
 
 using Jobs = pair<int, int>;
 
+istream &operator>>(istream &stream, Jobs &jobs)
+{
+    stream >> jobs.first >> expect<'-'> >> jobs.second;
+    return (stream);
+}
+
 bool checkValidElfJobs(const Jobs &elf1, const Jobs &elf2) {
     return (elf1.first > elf1.second || elf2.first > elf2.second);
 }
@@ -26,6 +32,11 @@ bool checkElfJobs(const Jobs &elf1, const Jobs &elf2) {
     if (elf2.first >= elf1.first && elf2.second <= elf1.second)
         return (true);
     return (false);
+}
+
+ostream &operator<<(ostream &stream, const Jobs &jobs) {
+    stream << jobs.first << '-' << jobs.second;
+    return (stream);
 }
 
 int main(int argc, char **argv) {
@@ -44,15 +55,20 @@ int main(int argc, char **argv) {
     Jobs elf2;
 
     // clang-format off
-    while (inputFile >> noskipws >> elf1.first >> expect<'-'> >> elf1.second >> expect<','> >> elf2.first >> expect<'-'> >> elf2.second >> expect<'\n'>)
+    while (inputFile >> noskipws >> elf1 >> expect<','> >> elf2 >> expect<'\n'>)
     // clang-format on
     {
         if (checkValidElfJobs(elf1, elf2)) {
             cerr << "Input range error" << endl;
             return (EXIT_FAILURE);
         }
-        if (checkElfJobs(elf1, elf2))
+        cout << elf1 << "," << elf2 << " ";
+        if (checkElfJobs(elf1, elf2)) {
             totalOverlap++;
+            cout << "overlap";
+        } else
+            cout << "no-overlap";
+        cout << endl;
     }
     if (!inputFile.eof()) {
         cerr << "Input file error Error" << endl;
