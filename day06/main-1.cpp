@@ -34,8 +34,7 @@ int main(int argc, char **argv) {
         if (checkUnique(buffer))
             break;
     }
-    if (inputFile.eof() || c == '\n')
-    {
+    if (inputFile.eof() || c == '\n') {
         cerr << "Stream stopped before a marker was encounderd" << endl;
         return (EXIT_FAILURE);
     }
